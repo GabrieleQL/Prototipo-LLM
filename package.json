@@ -1,0 +1,21 @@
+{
+  "name": "prototipo",
+  "version": "1.0.0",
+  "description": "Prototipo-LLM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrieleQL/Prototipo-LLM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/GabrieleQL/Prototipo-LLM/issues"
+  },
+  "homepage": "https://github.com/GabrieleQL/Prototipo-LLM#readme"
+}
