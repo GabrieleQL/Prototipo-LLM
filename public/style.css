@@ -1,0 +1,63 @@
+body{
+    max-width: 40%;
+    margin: 2rem;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2{
+    text-align: left;
+    font-size: 2rem;
+    font-weight: 500;
+    color: steelblue;
+}
+
+p{
+    font-size: 1.2rem;
+}
+
+.content-div{
+    max-width: 65%;
+    margin-left: 7rem;    
+}
+
+.content-div-div{
+    display: flex;
+    justify-content: right
+}
+
+label{
+    padding: 1rem;
+    font-size: 1.2rem;
+    color: goldenrod;
+    font-weight: 500;
+}
+
+input{
+    width: 5rem;
+}
+input, select{
+    font-size: 1.2rem;
+}
+
+button{
+    width: 6rem;
+    height: 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: goldenrod;
+    color: whitesmoke;
+    border: none;
+    border-radius: 3rem;
+    margin-top: 1rem;
+    margin-right: 2rem;
+}
+
+pre{
+    font-size: 1rem;
+}

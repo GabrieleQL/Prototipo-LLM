@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Projeto Cifra para Instrumentos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="content">
+        <h1> Assistente de Cifras</h1>
+        <p>Abaixo, informe uma cifra e o instrumento que você desejar, que será gerado um conjunto de cifras no mesmo campo harmônico.</p>
+        <div class="content-div">
+            <label for="cifra">
+                Cifra: <input type="text" id="cifra" name="cifra" placeholder="Bm">
+            </label>
+            <label for="instr">Instrumento:
+                <select name="instr" id="instrumento">
+                    <option value="1">Violão e Guitarra</option>
+                    <option value="2">Teclado</option>
+                    <option value="3">Ukulele</option>
+                    <option value="4">Cavaquinho</option>
+                </select>
+            </label>
+            <div class="content-div-div">
+                <button onclick="enviar()">Enviar</button>
+            </div>
+        </div>
+
+        <h2>Seus Acordes:</h2>
+        <pre id="resposta">Aparecem aqui.</pre>
+        <script>
+            async function enviar() {
+                const prompt = document.getElementById("cifra").value;
+                const select = document.getElementById('instrumento')
+                const texto = select.options[select.selectedIndex].text;
+
+                prompt = prompt + texto
+
+                const output = document.getElementById("resposta");
+                output.textContent = "Consultando a IA...";
+                try {
+                    const response = await fetch("/api/llm", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ prompt })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) {
+                        output.textContent = data.erro || "Erro desconhecido.";
+                        return;
+                    }
+                    output.textContent = data.resposta;
+                } 
+                catch (error) {
+                    output.textContent = "Erro ao conectar com a API local.";
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
