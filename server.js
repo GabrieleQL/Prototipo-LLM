@@ -19,7 +19,8 @@ app.get("/api/status", (req, res) => {
 });
 app.post("/api/llm", async (req, res) => {
     try {
-        const { prompt } = req.body;
+        const { cifra, instrumento } = req.body;
+        const prompt = `${cifra} ${instrumento}`;
         if (!prompt || prompt.trim().length === 0) {
             return res.status(400).json({ erro: "O campo prompt e obrigatorio." });
     }
@@ -32,14 +33,14 @@ app.post("/api/llm", async (req, res) => {
         "Authorization": `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost:3000",
-        "X-OpenRouter-Title": "Projeto FIA ADS"
+        "X-OpenRouter-Title": "Prototipo Acordes"
         },
         body: JSON.stringify({
             model: MODEL,
             messages: [
               {
                 role: "system",
-                content: "Você é um assistente técnico de instrumentos. Você deve gerar acordes de um mesmo campo harmônico, com base na cifra e instrumento descritos abaixo. Esses acordes devem ser representados em diagrama visual segundo o instrumento informado. Caso o instrumento possua cordas, elas devem aparecer com as cordas de cima para baixo."
+                content: "<system_role> Você é um gerador de dados estrito que converte solicitações musicais APENAS em sintaxe ChordSheetJS pura. Você não conversa, não explica e não desenha. </system_role> <instructions> O usuário informará um acorde/tom (ex: 'Am', 'C', 'Dó Maior').  Caso o input do usuário seja inválido, nulo, vazio ou contenha a palavra 'undefined', assuma por padrão o tom de 'C' (Dó Maior) para não quebrar a aplicação. Identifique o Campo Harmônico da cifra extraída, crie uma progressão simples para iniciantes e envelopar o resultado no formato ChordSheetJS. </instructions> <CRITICAL_NEGATIVE_RULES> - ZERO TEXTO: É terminantemente proibido incluir qualquer palavra em português fora das diretivas do ChordSheetJS. Não cumprimente, não explique, não use Markdown comum. - ZERO GRÁFICOS: É terminantemente proibido gerar caracteres ASCII, linhas pontilhadas (---|---), barras (|), tablaturas, diagramas de braço de instrumento ou representações visuais. - Se você gerar qualquer caractere como '|', '-', ou textos explicativos, a aplicação quebrará. Limite-se ao formato do exemplo. </CRITICAL_NEGATIVE_RULES> <required_output_format> Sua resposta deve conter EXATAMENTE esta estrutura de metadados e colchetes, mudando apenas o conteúdo interno:  {title: Campo Harmonico de [NOME_DO_TOM]} {subtitle: Acordes Disponiveis} [Cifra1] [Cifra2] [Cifra3] [Cifra4] [Cifra5] [Cifra6] [Cifra7] {subtitle: Sequencia Sugerida para Pratica} [Cifra1] [Cifra2] [Cifra3] [Cifra4] </required_output_format>  <example_execution> User Input: 'Am e instrumento violão' Output: {title: Campo Harmonico de La Menor} {subtitle: Acordes Disponiveis} [Am] [Bdim] [C] [Dm] [Em] [F] [G] {subtitle: Sequencia Sugerida para Pratica} [Am] [F] [C] [G] </example_execution> Gere a saída para o input do usuário agora, seguindo estritamente as regras."
               },
               {
                 role: "user",
@@ -49,6 +50,7 @@ app.post("/api/llm", async (req, res) => {
             temperature: 0.7,
             max_completion_tokens: 700
         })
+        // As cifras devem ser geradas em formato chordsheetjs, com a cifra principal em destaque e as cifras do mesmo campo harmônico em sequência. O instrumento deve ser considerado na geração das cifras.
     });
     if (!response.ok) {
         const detalhe = await response.text();
