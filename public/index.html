@@ -6,44 +6,44 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <script>
-            async function enviar() {
-                const cifra = document.getElementById("cifra").value;
-                const select = document.getElementById('instrumento')
-                const valor = select.value;
+    async function enviar() {
+        const cifra = document.getElementById("cifra").value;
+        const select = document.getElementById('instrumento')
+        const valor = select.value;
 
-                let instrumento;
-                if (valor == 1) {
-                    instrumento = "Violão e Guitarra"
-                } else if (valor == 2) {
-                    instrumento = "Teclado"
-                } else if (valor == 3) {
-                    instrumento = "Ukulele"
-                } else if (valor == 4) {
-                    instrumento = "Cavaquinho"
-                }
+        let instrumento;
+        if (valor == 1) {
+            instrumento = "Violão e Guitarra"
+        } else if (valor == 2) {
+            instrumento = "Teclado"
+        } else if (valor == 3) {
+            instrumento = "Ukulele"
+        } else if (valor == 4) {
+            instrumento = "Cavaquinho"
+        }
 
-                prompt = cifra + " " + instrumento
+        prompt = cifra + " " + instrumento
 
-                const output = document.getElementById("resposta");
-                output.textContent = "Consultando a IA...";
-                try {
-                    const response = await fetch("/api/llm", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ prompt })
-                    });
-                    const data = await response.json();
-                    if (!response.ok) {
-                        output.textContent = data.erro || "Erro desconhecido.";
-                        return;
-                    }
-                    output.textContent = data.resposta;
-                } 
-                catch (error) {
-                    output.textContent = "Erro ao conectar com a API local.";
-                }
+        const output = document.getElementById("resposta");
+        output.textContent = "Consultando a IA...";
+        try {
+            const response = await fetch("/api/llm", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                output.textContent = data.erro || "Erro desconhecido.";
+                return;
             }
-        </script>
+            output.textContent = data.resposta;
+        } 
+        catch (error) {
+            output.textContent = "Erro ao conectar com a API local.";
+        }
+    }
+</script>
 <body>
     <div class="container">
         <div class="content">
@@ -68,10 +68,8 @@
                     </div>
                 </form>
             </div>
-
             <h2>Seus Acordes:</h2>
-            <pre id="resposta">Aparecem aqui...</pre>
-                
+            <pre id="resposta">Aparecem aqui...</pre>     
         </div>
     </div>
 </body>

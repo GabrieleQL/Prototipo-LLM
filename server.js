@@ -50,7 +50,6 @@ app.post("/api/llm", async (req, res) => {
             temperature: 0.7,
             max_completion_tokens: 700
         })
-        // As cifras devem ser geradas em formato chordsheetjs, com a cifra principal em destaque e as cifras do mesmo campo harmônico em sequência. O instrumento deve ser considerado na geração das cifras.
     });
     if (!response.ok) {
         const detalhe = await response.text();
