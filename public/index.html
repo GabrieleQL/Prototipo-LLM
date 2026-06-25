@@ -4,53 +4,20 @@
     <meta charset="UTF-8" />
     <title>Cifra & Acordes</title>
     <link rel="stylesheet" href="css/style.css">
+         
+    <!-- Imports do jtab -->
+    <script src="https://googleapis.com"></script>
+    <script src="https://cloudflare.com"></script>
+    <script src="https://jsdelivr.net"></script>
+</head> 
 </head>
-<script>
-    async function enviar() {
-        const cifra = document.getElementById("cifra").value;
-        const select = document.getElementById('instrumento')
-        const valor = select.value;
-
-        let instrumento;
-        if (valor == 1) {
-            instrumento = "Violão e Guitarra"
-        } else if (valor == 2) {
-            instrumento = "Teclado"
-        } else if (valor == 3) {
-            instrumento = "Ukulele"
-        } else if (valor == 4) {
-            instrumento = "Cavaquinho"
-        }
-
-        prompt = cifra + " " + instrumento
-
-        const output = document.getElementById("resposta");
-        output.textContent = "Consultando a IA...";
-        try {
-            const response = await fetch("/api/llm", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt })
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                output.textContent = data.erro || "Erro desconhecido.";
-                return;
-            }
-            output.textContent = data.resposta;
-        } 
-        catch (error) {
-            output.textContent = "Erro ao conectar com a API local.";
-        }
-    }
-</script>
 <body>
     <div class="container">
         <div class="content">
             <h1> Assistente de Cifras</h1>
             <p>Abaixo, informe uma cifra e o instrumento que você desejar, que será gerado um conjunto de acordes do mesmo campo harmônico.</p>
             <div class="content-div">
-                <form action="post" onsubmit="event.preventDefault(); enviar();">
+                <form action="" onsubmit="event.preventDefault(); enviar();">
                     <label for="cifra">
                         Cifra: <input type="text" id="cifra" name="cifra" placeholder="Bm">
                     </label>
@@ -72,5 +39,58 @@
             <pre id="resposta">Aparecem aqui...</pre>     
         </div>
     </div>
+    <script >
+        async function enviar() {
+            const cifra = document.getElementById("cifra").value;
+            const select = document.getElementById('instrumento')
+            const valor = select.value;
+
+            let instrumento;
+            if (valor == 1) {
+                instrumento = "Violão e Guitarra"
+            } else if (valor == 2) {
+                instrumento = "Teclado"
+            } else if (valor == 3) {
+                instrumento = "Ukulele"
+            } else if (valor == 4) {
+                instrumento = "Cavaquinho"
+            }
+
+            prompt = cifra + " " + instrumento
+            // prompt = cifra
+
+            const output = document.getElementById("resposta");
+            output.textContent = "Consultando a IA...";
+            try {
+                const response = await fetch("/api/llm", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    output.textContent = data.erro || "Erro desconhecido.";
+                    return;
+                }
+                
+                const apenas_letras = data.resposta.replace(/[\[\]]/g, "").trim();
+                $(document).ready(function() {
+                    jtab.render($('#resposta'), apenas_letras); 
+
+
+            });
+                
+            } 
+            catch (error) {
+                output.textContent = "Erro ao conectar com a API local.";
+            }
+        }
+    </script>
 </body>
 </html>
+
+<!--// const acordesSVG = `<div class='jtab'>${apenas_letras}</div>`;
+
+                // output.innerHTML = acordesSVG;
+                output.innerHTML = jtab(apenas_letras.resposta);
+                // output.textContent = apenas_letras.resposta; -->
