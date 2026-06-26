@@ -4,12 +4,8 @@
     <meta charset="UTF-8" />
     <title>Cifra & Acordes</title>
     <link rel="stylesheet" href="css/style.css">
-         
-    <!-- Imports do jtab -->
-    <script src="https://googleapis.com"></script>
-    <script src="https://cloudflare.com"></script>
-    <script src="https://jsdelivr.net"></script>
-</head> 
+
+    <link rel="stylesheet" href="https://jtab.tardate.com/css/jtab-helper.css" type="text/css" />
 </head>
 <body>
     <div class="container">
@@ -39,25 +35,29 @@
             <pre id="resposta">Aparecem aqui...</pre>     
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+    <script src="https://jtab.tardate.com/javascripts/jtab.js"></script>
+
     <script >
         async function enviar() {
             const cifra = document.getElementById("cifra").value;
-            const select = document.getElementById('instrumento')
-            const valor = select.value;
+            // const select = document.getElementById('instrumento')
+            // const valor = select.value;
 
-            let instrumento;
-            if (valor == 1) {
-                instrumento = "Violão e Guitarra"
-            } else if (valor == 2) {
-                instrumento = "Teclado"
-            } else if (valor == 3) {
-                instrumento = "Ukulele"
-            } else if (valor == 4) {
-                instrumento = "Cavaquinho"
-            }
+            // let instrumento;
+            // if (valor == 1) {
+            //     instrumento = "Violão e Guitarra"
+            // } else if (valor == 2) {
+            //     instrumento = "Teclado"
+            // } else if (valor == 3) {
+            //     instrumento = "Ukulele"
+            // } else if (valor == 4) {
+            //     instrumento = "Cavaquinho"
+            // }
 
-            prompt = cifra + " " + instrumento
-            // prompt = cifra
+            prompt = cifra
 
             const output = document.getElementById("resposta");
             output.textContent = "Consultando a IA...";
@@ -67,30 +67,37 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ prompt })
                 });
+
                 const data = await response.json();
+
                 if (!response.ok) {
                     output.textContent = data.erro || "Erro desconhecido.";
                     return;
                 }
-                
+
+                // 1. Limpa a string removendo os colchetes enviados pela IA
                 const apenas_letras = data.resposta.replace(/[\[\]]/g, "").trim();
-                $(document).ready(function() {
-                    jtab.render($('#resposta'), apenas_letras); 
 
-
-            });
+                // 2. Opcional: Log direto no Console do Navegador (F12) para depuração
+                console.log("Acordes resposta:", data.resposta);
+                console.log("Acordes processados:", apenas_letras);
                 
-            } 
-            catch (error) {
+                // 3. Seleciona o elemento, limpa o conteúdo anterior e renderiza com o jtab
+                const $respostaEle = $('#resposta');
+                $respostaEle.empty(); 
+                
+                jtab.render($respostaEle, apenas_letras); 
+
+            } catch (error) {
                 output.textContent = "Erro ao conectar com a API local.";
+                console.error("Erro na requisição:", error);
             }
         }
     </script>
 </body>
 </html>
 
-<!--// const acordesSVG = `<div class='jtab'>${apenas_letras}</div>`;
+<!-- const acordesSVG = `<div class='jtab'>${apenas_letras}</div>`;
 
                 // output.innerHTML = acordesSVG;
-                output.innerHTML = jtab(apenas_letras.resposta);
-                // output.textContent = apenas_letras.resposta; -->
+                output.innerHTML = jtab(apenas_letras.resposta);-->

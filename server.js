@@ -5,7 +5,7 @@ import "dotenv/config";
 const app = express();
 const PORT = 3000;
 const API_KEY = process.env.OPENROUTER_API_KEY;
-const MODEL = "openai/gpt-oss-120b:free";
+const MODEL = process.env.OPENROUTER_MODEL || "openai/gpt-oss-120b:free";
 
 if (!API_KEY) {
  console.error("Erro: configure OPENROUTER_API_KEY no arquivo .env.");
@@ -19,8 +19,9 @@ app.get("/api/status", (req, res) => {
 });
 app.post("/api/llm", async (req, res) => {
     try {
-        const { cifra, instrumento } = req.body;
-        const prompt = `${cifra} ${instrumento}`;
+        console.log(`usuário envio ${req.body.prompt}`)
+        // const { cifra } = req.body.prompt;
+        const prompt = req.body.prompt;
         if (!prompt || prompt.trim().length === 0) {
             return res.status(400).json({ erro: "O campo prompt e obrigatorio." });
     }
@@ -38,15 +39,47 @@ app.post("/api/llm", async (req, res) => {
         body: JSON.stringify({
             model: MODEL,
             messages: [
-              {
-                role: "system",
-                content: "<system_role> Você é um gerador de dados estrito que converte solicitações musicais APENAS em sintaxe ChordSheetJS pura. Você não conversa, não explica e não desenha. </system_role> <instructions> O usuário informará um acorde/tom (ex: 'Am', 'C', 'Dó Maior').  Caso o input do usuário seja inválido, nulo, vazio ou contenha a palavra 'undefined', assuma por padrão o tom de 'C' (Dó Maior) para não quebrar a aplicação. Identifique o Campo Harmônico da cifra extraída, crie uma progressão simples para iniciantes com o acorde/tom informado e envelopar o resultado no formato ChordSheetJS. </instructions> <CRITICAL_NEGATIVE_RULES> - ZERO TEXTO: É terminantemente proibido incluir qualquer palavra em português fora das diretivas do ChordSheetJS. Não cumprimente, não explique, não use Markdown comum. - ZERO GRÁFICOS: É terminantemente proibido gerar caracteres ASCII, linhas pontilhadas (---|---), barras (|), tablaturas, diagramas de braço de instrumento ou representações visuais. - Se você gerar qualquer caractere como '|', '-', ou textos explicativos, a aplicação quebrará. Limite-se ao formato do exemplo. </CRITICAL_NEGATIVE_RULES> <required_output_format> Sua resposta deve conter EXATAMENTE esta estrutura de metadados e colchetes, mudando apenas o conteúdo interno:Cifra1 Cifra2 Cifra3 Cifra4 </required_output_format> <example_execution> User Input: 'Am e violão' Output:Am F C G </example_execution> Gere a saída para o input do usuário agora, seguindo estritamente as regras."
-              },
-              {
-                role: "user",
-                content: prompt
-              }
-            ],
+                    {
+                        role: "system",
+                        content: `Você é um gerador de dados estrito que converte uma cifra/tom informado APENAS em uma progressão de 4 acordes na sintaxe jtab (separados por espaço). Você não conversa, não explica e não usa Markdown.
+
+                        <instructions>
+                        1. O input do usuário será estritamente um acorde ou tom (ex: 'Am', 'C', 'F#').
+                        2. Identifique o Campo Harmônico desse tom e gere uma progressão simples de 4 acordes para iniciantes.
+                        3. REGRA DE FALLBACK: Se o input for vazio, contiver a palavra exata 'undefined' ou não for um acorde/tom válido, assuma o tom padrão de Dó Maior e retorne exatamente: C G Am F.
+                        </instructions>
+
+                        <CRITICAL_NEGATIVE_RULES>
+                        - ZERO TEXTO EXTRA: Proibido incluir qualquer caractere, letra, saudação ou explicação que não faça parte dos 4 acordes.
+                        - ZERO FORMATAÇÃO: Não use blocos de código (\`\`\`), não use colchetes [ ], barras |, hífens - ou tablaturas em texto.
+                        - A saída deve ser estritamente uma única linha de texto com 4 acordes e 3 espaços no total.
+                        </CRITICAL_NEGATIVE_RULES>
+
+                        <required_output_format>
+                        Acorde1 Acorde2 Acorde3 Acorde4
+                        </required_output_format>
+
+                        <examples>
+                        User Input: Am
+                        Output: Am F C G
+
+                        User Input: D
+                        Output: D Bm G A
+
+                        User Input: F#m
+                        Output: F#m D A E
+
+                        User Input: undefined
+                        Output: C G Am F
+                        </examples>
+
+                        Gere a saída para o input do usuário agora, seguindo estritamente as regras.`
+                    },
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ],
             temperature: 0.7,
             max_completion_tokens: 700
         })
