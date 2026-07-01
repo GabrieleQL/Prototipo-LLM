@@ -19,8 +19,8 @@ app.get("/api/status", (req, res) => {
 });
 app.post("/api/llm", async (req, res) => {
     try {
-        console.log(`usuário envio ${req.body.prompt}`)
-        // const { cifra } = req.body.prompt;
+        // console.log(`usuário envio ${req.body.prompt}`)
+        const { cifra } = req.body.prompt;
         const prompt = req.body.prompt;
         if (!prompt || prompt.trim().length === 0) {
             return res.status(400).json({ erro: "O campo prompt e obrigatorio." });
