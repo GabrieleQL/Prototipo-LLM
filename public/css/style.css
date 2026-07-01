@@ -83,6 +83,7 @@ button{
     font-size: 1rem;
     background-color: whitesmoke;
     width: 95%;
-    height: 18rem;
+    height: 14rem;
     padding: 1rem;
+    align-items: center;
 }
