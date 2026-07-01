@@ -13,13 +13,13 @@
             <h1> Assistente de Cifras</h1>
             <p>Abaixo, informe uma cifra e o instrumento que você desejar, que será gerado um conjunto de acordes do mesmo campo harmônico.</p>
             <div class="content-div">
-                <form action="" onsubmit="event.preventDefault(); enviar();">
+                <form id="meuFormulario" action="" onsubmit="event.preventDefault(); enviar();">
                     <label for="cifra">
                         Cifra: <input type="text" id="cifra" name="cifra" placeholder="Bm">
                     </label>
                     <div class="content-div-div">
-                        <button onclick="enviar()">Enviar</button>
-                        <button type="reset">Limpar</button>
+                        <button type="submit">Enviar</button>
+                        <button type="button" onclick="limpar()">Limpar</button>
                     </div>
                 </form>
             </div>
@@ -70,6 +70,10 @@
                 output.textContent = "Erro ao conectar com a API local.";
                 console.error("Erro na requisição:", error);
             }
+        }
+        async function limpar() {
+            document.getElementById("cifra").value = "";
+            document.getElementById("resposta").textContent = "Aparecem aqui...";
         }
     </script>
 </body>
