@@ -1,4 +1,4 @@
-# Prototipo-LLM
+# Prototipo-LLM -  Assistente de Cifras & Acordes
 
 Este projeto é um protótipo simples de aplicação web que usa IA para gerar progressões de acordes a partir de uma cifra ou tom informado. A ideia é receber uma entrada como "C", "Am" ou "G" e retornar uma sequência de 4 acordes do mesmo campo harmônico, exibida visualmente na interface.
 
