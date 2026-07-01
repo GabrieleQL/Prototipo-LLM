@@ -92,6 +92,8 @@ Nesse protótipo, ao utilizar o plugin do jTab, os acordes com pestanas podem se
 ![Acorde de fá sustenido](/public/assets/example1.png)
 ![Acorde de lá sustenido menor](/public/assets/example2.png)
 
+Vale ressaltar que um mesmo acorde pode ter mais de uma forma de representação, dependendo da fonte consultada. Com o uso do plugin jTab, a visualização é padronizada para um único formato, facilitando a leitura. Para mais informações, consulte o site [https://jtab.tardate.com/](https://jtab.tardate.com/).
+
 ### Pontos importantes
 
 - O resultado depende da qualidade da resposta do modelo e do prompt enviado.
