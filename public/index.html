@@ -17,14 +17,6 @@
                     <label for="cifra">
                         Cifra: <input type="text" id="cifra" name="cifra" placeholder="Bm">
                     </label>
-                    <label for="instr">Instrumento:
-                        <select name="instr" id="instrumento">
-                            <option value="1">Violão e Guitarra</option>
-                            <option value="2">Teclado</option>
-                            <option value="3">Ukulele</option>
-                            <option value="4">Cavaquinho</option>
-                        </select>
-                    </label>
                     <div class="content-div-div">
                         <button onclick="enviar()">Enviar</button>
                         <button type="reset">Limpar</button>
@@ -43,20 +35,6 @@
     <script >
         async function enviar() {
             const cifra = document.getElementById("cifra").value;
-            // const select = document.getElementById('instrumento')
-            // const valor = select.value;
-
-            // let instrumento;
-            // if (valor == 1) {
-            //     instrumento = "Violão e Guitarra"
-            // } else if (valor == 2) {
-            //     instrumento = "Teclado"
-            // } else if (valor == 3) {
-            //     instrumento = "Ukulele"
-            // } else if (valor == 4) {
-            //     instrumento = "Cavaquinho"
-            // }
-
             prompt = cifra
 
             const output = document.getElementById("resposta");
